@@ -37,7 +37,7 @@ def create_task():
         if field not in data:
             missing_fields.append(field)
     if missing_fields:
-        return {'error':f'{', '.join(missing_fields)} must be present'}
+        return {'error': f"{','.join(missing_fields)} must be in the request body"}, 400
     title = data['title']
     description = data['description']
     current_user = token_auth.current_user()
@@ -73,7 +73,7 @@ def create_user():
         if field not in data:
             missing_fields.append(field)
     if missing_fields:
-        return {'error':f'{', '.join(missing_fields)} must be present'}, 400
+        return {'error': f"{', '.join(missing_fields)} must be in the request body"}, 400
     username = data['username']
     email = data['email']
     password = data['password']

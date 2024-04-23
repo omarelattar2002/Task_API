@@ -1,6 +1,9 @@
 import secrets
 from . import db
 from datetime import datetime, timedelta, timezone
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,11 +32,28 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
-    password_hash = db.Column(db.String(120), nullable=False)
+    password = db.Column(db.String(120), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     token = db.Column(db.String, index=True, unique=True, default="default")
     token_expiration = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(minutes=5))
     tasks = db.relationship('Task', back_populates='author')
+
+
+    def set_password(self, plaintext_password):
+        self.password = generate_password_hash(plaintext_password)
+        self.save()
+
+
+
+    def check_password(self, plaintext_password):
+        return check_password_hash(self.password, plaintext_password)
+
+
+
+
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.set_password(kwargs.get('password', ''))
 
     def __init__(self,**kwargs):
         super(User, self).__init__(**kwargs)
