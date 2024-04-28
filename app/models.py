@@ -50,13 +50,9 @@ class User(db.Model):
 
 
 
-
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_password(kwargs.get('password', ''))
-
-    def __init__(self,**kwargs):
-        super(User, self).__init__(**kwargs)
         self.get_token()
 
     def get_token(self):
