@@ -77,7 +77,7 @@ def create_user():
     username = data['username']
     email = data['email']
     password = data['password']
-    new_user = User(username=username, email=email, password_hash=hash(password))
+    new_user = User(username=username, email=email, password=password)
     return new_user.to_json, 201
 
 
@@ -114,4 +114,4 @@ def delete_user(user_id):
 def create_token():
     user = basic_auth.current_user()
     token = user.get_token()
-    return jsonify({'token': token.get("token").decode('utf-8'),"token-expiration":token.get("token_expiration")}), 200
+    return jsonify({'token': token.get("token"),"token-expiration":token.get("token_expiration")}), 200
